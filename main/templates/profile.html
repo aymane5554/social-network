@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="{% static '/profile.js' %}"></script>
+<div id="profile">
+    <img src="{{user.image.url}}" id="profile_image">
+    <h3>{{user.username}}</h3>
+    <p>description :<br>{{user.bio}}</p>
+    <a href="/edit_profile"><button class="btn btn-primary">edit</button></a>
+    <button class="btn btn-info" id="friends-list" data-id="{{user.id}}">friends</button>
+    <button class="btn btn-danger"> change password</button>
+        <div id="friends">
+
+        </div>
+</div>
+<div id="posts">
+    
+</div>
+{% endblock %}

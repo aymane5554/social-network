@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="{% static '/saves.js' %}"></script>
+<center><h1>Saved Posts : </h1></center>
+<div id="posts">
+    {% for post in posts %}
+    <div class="poster">
+        <a href="/account/{{post.user.username}}"><img src="{{post.user.image.url}}" class="pfps">{{post.user.username}}</a>
+        {% if post.text != "" %}
+        <p class="post_text">{{post.text}}</p>
+        {% endif %}
+        {% if post.image.url != "" %}
+        <a href="/p/{{post.id}}"><img src="{{post.image.url}}" class="post_img"></a>
+        {% endif %}
+        
+        <hr>
+        <button class="cmt-btn" onclick="cmnt({{post.id}})" data-id="{{post.id}}">
+            comments
+        </button><button class="save-btn" onclick="s({{post.id}})" data-id="{{post.id}}">
+            save
+        </button><br>
+        <form onsubmit="post_comment({{post.id}});return false" id="c{{post.id}}">
+            <textarea name="comment" id ="textarea{{post.id}}" placeholder="comment" cols="30" rows="10"></textarea>
+            <br>
+            <input type="hidden" name="postId" value="{{post.id}}">
+            <input type="submit" name="comment_submit">
+        </form>
+        <div id="cmnts{{post.id}}">
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

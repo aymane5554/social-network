@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div id="spid">
+{% if post.image.url != "" %}
+<img src="{{post.image.url}}" id="spi">
+{% endif %}
+</div>
+
+<div id="spc">
+    <a href="/account/{{post.user.username}}"><img src="{{post.user.image.url}}" id="pfp">{{post.user.username}}</a> : {{post.text}}
+    <hr>
+    comments
+    <hr>
+    {% for c in cmnts %}
+    <p>{{c.user.username}} : {{c.text}}</p>
+    {% endfor %}
+</div>
+{% endblock %}

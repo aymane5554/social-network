@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="{% static '/home.js' %}"></script>
+<center><h2 style="color: red;">{{msg}}</h2></center>
+<div id="posting">
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %} 
+    <textarea name="pc" id="pc_id" cols="30" rows="10" placeholder="say something"></textarea><br>
+    <input name="pi" type="file" accept="image/*" >
+    <button type="submit" id="sb" name="post_submit">post</button>
+</form>
+</div> 
+<!-------------------------------------------------------------------feed -------------------------------------------------------------->
+<div id="posts">
+    
+</div>
+{% endblock %}

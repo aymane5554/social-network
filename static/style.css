@@ -1,0 +1,113 @@
+body{
+  background-color: rgb(15, 94, 80);
+  color: whitesmoke;
+}
+
+textarea {
+	width: 60%;
+	height: 100px;
+	padding: 12px 20px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	background-color: #f8f8f8;
+	font-size: 16px;
+	resize: none;
+  
+  }
+  
+#posting{
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#posting #sb{
+  width: 100px;
+  text-align: center;
+}
+
+#posts{
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+ 
+}
+.poster{
+  border: 1px black solid;
+  margin-bottom: 30px;
+  background-color: rgb(21, 125, 108);
+  word-wrap: break-word;
+}
+.post_img{
+  max-width: 100%;
+}
+
+.cmt-btn{
+  clear: top;
+}
+
+#nn{
+  background-color: rgb(9, 58, 49);
+}
+
+#spid{
+  text-align: center;
+}
+
+#spi{
+  width: 50%;
+  height: auto;
+}
+#spc{
+  text-align: center;
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
+#pfp{
+  height: 50px;
+  width: auto;
+  
+}
+
+.poster .pfps{
+  height: 50px;
+  width: auto;
+  
+}
+
+.poster a{
+  float: left;
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+.poster .post_text{
+  margin-top: 60px;
+  white-space: pre-line
+}
+
+.cp textarea {
+	width: 60%;
+	height: 50px;
+	padding: 12px 20px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	background-color: #f8f8f8;
+	font-size: 16px;
+	resize: none;
+  overflow: hidden;
+  }
+
+#profile{
+  text-align: center;
+  word-wrap: break-word;
+}
+
+#profile_image{
+  width: 30%;
+  height: auto;
+}
