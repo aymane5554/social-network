@@ -41,6 +41,10 @@ function load_posts(url){
                     poster.innerHTML += `<a href="/p/${data[i].id}"><img src="${data[i].image}" class="post_img"></a>`;
                 }
                 poster.innerHTML += `<hr>`;
+                like = document.createElement("button");
+                like.className = "like-btn";
+                like.innerHTML = "like";
+                like.setAttribute("onclick",`like_post(${data[i].id})`);
                 button = document.createElement("button");
                 button.className = "cmt-btn";
                 button.innerHTML = "comments";
@@ -51,9 +55,15 @@ function load_posts(url){
                 button.setAttribute("onclick",`cmnt(${data[i].id})`);
                 save.setAttribute("onclick",`s(${data[i].id})`);
                 save.setAttribute("data-id",`${data[i].id}`);
+                share = document.createElement("button");
+                share.setAttribute("data-id",`${data[i].id}`);
+                share.className = "share-btn";
+                share.innerHTML = "=>";
+                poster.appendChild(like);
                 poster.appendChild(button);
                 poster.appendChild(save);
-                poster.innerHTML += `<form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
+                poster.appendChild(share);
+                poster.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
                 <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
                 <br>
                 <input type="hidden" name="postId" value="${data[i].id}">
@@ -64,7 +74,7 @@ function load_posts(url){
         });
 
         resolve("Done");
-    });
+    });     
 }
 
 function cmnt(id){
@@ -117,6 +127,24 @@ function post_comment(id){
     });
     document.querySelector(`#textarea${id}`).value = "";
     
+}
+
+function like_post(id){
+    fetch(`/api/${id}`, {
+        method: "put",
+        credentials: "same-origin",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify("like")
+    })
+    .then(response => response.json())
+    .then(data=>{
+        p = document.getElementById(`l${id}`);
+        p.innerHTML = data['likes'];
+    });
 }
 
 document.addEventListener('DOMContentLoaded',async function(){

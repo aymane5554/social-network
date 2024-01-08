@@ -14,16 +14,32 @@ def post_details(request,id):
     post = Post.objects.get(pk = id) 
     if request.method == "GET":
         serialize = Post_Serializer(post)
-        JsonResponse(serialize.data , safe=False)
-    if request.method == "PUT":
-        if post in request.user.saves.all():
-            request.user.saves.remove(post)
+        return JsonResponse(serialize.data , safe=False)
+    elif request.method == "PUT":
+        if request.data == "save":
+            if post in request.user.saves.all():
+                request.user.saves.remove(post)
+                serialize = Post_Serializer(post)
+                return JsonResponse(serialize.data , safe=False)
+            request.user.saves.add(post)
             serialize = Post_Serializer(post)
-            JsonResponse(serialize.data , safe=False)
-        
-        request.user.saves.add(post)
+            return JsonResponse(serialize.data , safe=False)
+            
+        elif request.data == "like":
+            if request.user in post.likers.all():
+                post.likes -= 1
+                post.likers.remove(request.user)
+                post.save()
+                serialize = Post_Serializer(post)
+                return JsonResponse(serialize.data , safe=False)
+            
+            post.likes += 1 
+            post.likers.add(request.user)
+            post.save()
+            serialize = Post_Serializer(post)
+            return JsonResponse(serialize.data , safe=False)
         serialize = Post_Serializer(post)
-        JsonResponse(serialize.data , safe=False)
+        return JsonResponse(serialize.data , safe=False)
 
 @login_required(login_url="/login")
 @api_view(["GET","POST"])
