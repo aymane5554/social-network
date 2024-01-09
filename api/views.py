@@ -9,7 +9,7 @@ from rest_framework.response import Response
 # Create your views here.
 
 @login_required(login_url="/login")
-@api_view(["GET","PUT"])
+@api_view(["GET","PUT","DELETE"])
 def post_details(request,id):
     post = Post.objects.get(pk = id) 
     if request.method == "GET":
@@ -40,6 +40,9 @@ def post_details(request,id):
             return JsonResponse(serialize.data , safe=False)
         serialize = Post_Serializer(post)
         return JsonResponse(serialize.data , safe=False)
+    if request.method == "DELETE":
+        post.delete()
+        return JsonResponse({"post" : "deleted"})
 
 @login_required(login_url="/login")
 @api_view(["GET","POST"])
@@ -90,6 +93,16 @@ def feed(request):
 def prpo(request,id):
     posts = Post.objects.filter(user = User.objects.get(username = id)).order_by("-id")
     serialize = Post_Serializer(posts,many = True)
+    for i in range(len(serialize.data)):
+        user = User.objects.get(pk = serialize.data[i]["user"])
+        serialize.data[i]["user"] = [serialize.data[i]["user"] , user.username,user.image.url]
+    return JsonResponse(serialize.data , safe=False)
+
+@login_required(login_url="/login")
+@api_view(["GET"])
+def saved(request):
+    posts = request.user.saves.all()
+    serialize = Post_Serializer(posts , many=True)
     for i in range(len(serialize.data)):
         user = User.objects.get(pk = serialize.data[i]["user"])
         serialize.data[i]["user"] = [serialize.data[i]["user"] , user.username,user.image.url]

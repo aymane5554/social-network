@@ -51,18 +51,21 @@ function load_posts(url){
                 save = document.createElement("button");
                 save.className = "save-btn";
                 save.innerHTML = "save";
-                button.setAttribute("data-id",`${data[i].id}`);
                 button.setAttribute("onclick",`cmnt(${data[i].id})`);
                 save.setAttribute("onclick",`s(${data[i].id})`);
-                save.setAttribute("data-id",`${data[i].id}`);
                 share = document.createElement("button");
-                share.setAttribute("data-id",`${data[i].id}`);
                 share.className = "share-btn";
                 share.innerHTML = "=>";
                 poster.appendChild(like);
                 poster.appendChild(button);
                 poster.appendChild(save);
                 poster.appendChild(share);
+                delBtn = document.createElement('button');
+                delBtn.className = "del-btn";
+                delBtn.innerHTML = "X";
+                delBtn.setAttribute("onclick",`del_post(${data[i].id})`);
+                poster.appendChild(delBtn);
+                poster.innerHTML += `<a href="/edit${data[i].id}"><button>edit</button></a>`;
                 poster.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
                 <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
                 <br>
@@ -99,7 +102,7 @@ function s(id){
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(" ")
+        body: JSON.stringify("save")
     })
     .then(response => response.json())
     .then(data=>console.log(data));
@@ -147,6 +150,27 @@ function like_post(id){
     });
 }
 
+function del_post(id){
+    fetch(`/api/${id}`,{
+        method :"delete",
+        credentials: "same-origin",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data =>{
+        e = document.getElementById(`cmnts${id}`);
+        e.parentElement.style.display = "none"; 
+    })
+
+}
+
+function edit_post(id){
+
+}
 document.addEventListener('DOMContentLoaded',async function(){
     
     friends_btn = document.getElementById("friends-list");

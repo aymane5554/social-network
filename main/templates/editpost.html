@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %} 
+    <textarea name="text"  cols="30" rows="10" placeholder="say something">{{post.text}}</textarea><br>
+    <input name="img" type="file" accept="image/*" >
+    <button type="submit" id="sb" name="post_submit">post</button>
+</form>
+{% endblock %}

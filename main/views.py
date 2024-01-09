@@ -126,5 +126,19 @@ def add_friend(request,id):
 
 @login_required(login_url="/login")
 def saveView(request):
-    posts = request.user.saves.all()
-    return render(request,"saves.html",{"posts":posts})
+    return render(request,"saves.html",)
+
+@login_required(login_url="/login")
+def edit_post(request,p):
+    post  = models.Post.objects.get(pk = p)
+    if request.method == "POST":
+        if request.POST["text"] == "" and len(request.FILES) == 0:
+            return render(request,"editpost.html",{"post" : post})
+        text = request.POST["text"]
+        if len(request.FILES) > 0 :
+            image = request.FILES["img"]
+            post.image = image
+        post.text = text
+        post.save() 
+        return redirect("/profile")
+    return render(request,"editpost.html",{"post" : post})
