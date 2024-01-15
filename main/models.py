@@ -11,6 +11,8 @@ class User(AbstractUser):
 class Post(models.Model):
     text = models.TextField()
     image = models.ImageField(blank=True,null=True)
+    is_share = models.BooleanField(default=False)
+    shared = models.ForeignKey("self",blank=True , null = True , on_delete = models.CASCADE)
     user = models.ForeignKey(User,on_delete = models.CASCADE,related_name='posts')
     date = models.DateTimeField(auto_now_add=True)
     likes = models.IntegerField(default = 0)
@@ -21,6 +23,14 @@ class Post(models.Model):
 class Comments(models.Model):
     text = models.TextField(default="")
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    reply = models.OneToOneField('self',on_delete=models.CASCADE,blank=True,null=True)
     post = models.ForeignKey(Post,on_delete = models.CASCADE ,related_name="comments")
-    likes = models.IntegerField(default = 0)
+
+class Reply(models.Model):
+    text = models.TextField(default="")
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comments,on_delete=models.CASCADE,related_name="reps")
+
+class Notification(models.Model):
+    text = models.TextField()
+    user = models.ForeignKey(User,on_delete = models.CASCADE,related_name="notifications")
+    link = models.CharField(max_length=60) 

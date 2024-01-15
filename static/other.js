@@ -82,18 +82,14 @@ function load_posts(url){
                     main.appendChild(button);
                     main.appendChild(save);
                     main.appendChild(share);
-                    main.innerHTML += `<a href ="/edit${data[i].id}"><button>edit</button></a> `;
-                    del = document.createElement('button');
-                    del.innerHTML = "X";
-                    del.setAttribute("onclick",`del_post(${data[i].id},${data[i].is_share})`)
-                    main.appendChild(del);
                     main.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
                     <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
                     <br>
                     <input type="hidden" name="postId" value="${data[i].id}">
                     <input type="submit" name="comment_submit">
                     </form>`;
-                    main.innerHTML += `<div id="cmnts${data[i].id}"></div>`;
+                    poster.innerHTML += `<div id="cmnts${data[i].id}"></div>`;
+                    
                     continue;
                 }
                 poster = document.createElement("div");
@@ -137,11 +133,6 @@ function load_posts(url){
                 poster.appendChild(button);
                 poster.appendChild(save);
                 poster.appendChild(share);
-                poster.innerHTML += `<a href ="/edit${data[i].id}"><button>edit</button></a> `;
-                del = document.createElement('button');
-                del.innerHTML = "X";
-                del.setAttribute("onclick",`del_post(${data[i].id},${data[i].is_share})`)
-                poster.appendChild(del);
                 poster.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
                 <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
                 <br>
@@ -343,7 +334,6 @@ function send_notification(text,user){
         body: JSON.stringify(data)
     })
 }
-
 document.addEventListener('DOMContentLoaded',async function(){
     
     friends_btn = document.getElementById("friends-list");

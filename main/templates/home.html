@@ -8,7 +8,7 @@
 <div id="posting">
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %} 
-    <textarea name="pc" id="pc_id" cols="30" rows="10" placeholder="say something"></textarea><br>
+    <textarea name="pc" id="pc_id" cols="30" rows="10" placeholder="say something" ></textarea><br>
     <input name="pi" type="file" accept="image/*" >
     <button type="submit" id="sb" name="post_submit">post</button>
 </form>

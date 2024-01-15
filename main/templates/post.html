@@ -2,13 +2,22 @@
 {% block body %}
 
 <div id="spid">
+<a href="/account/{{post.user.username}}"><img src="{{post.user.image.url}}" id="pfp">{{post.user.username}}</a> : {{post.text}}
 {% if post.image.url != "" %}
 <img src="{{post.image.url}}" id="spi">
 {% endif %}
 </div>
 
+{% if post.is_share == True %}
+<div id="shared_details">
+    <a href="/account/{{post.shared.user.username}}"><img src="{{post.user.image.url}}" id="pfp">{{post.shared.user.username}}</a> : {{ post.shared.text }}
+    {% if post.shared.image.url != "" %}
+    <img src="{{post.shared.image.url}}" id="spi">
+    {% endif %}
+</div>
+{% endif %}
+
 <div id="spc">
-    <a href="/account/{{post.user.username}}"><img src="{{post.user.image.url}}" id="pfp">{{post.user.username}}</a> : {{post.text}}
     <hr>
     comments
     <hr>

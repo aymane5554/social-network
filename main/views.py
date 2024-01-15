@@ -122,6 +122,7 @@ def add_friend(request,id):
         user.friends.remove(fr)
         return redirect(f"/account/{fr.username}")
     user.friends.add(fr)
+    models.Notification.objects.create(text=f"{request.user.username} followed you" , user = fr , link=f"/account/{request.user.username}")
     return redirect(f"/account/{fr.username}")
 
 @login_required(login_url="/login")
