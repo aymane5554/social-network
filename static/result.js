@@ -13,92 +13,21 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
 var csrftoken = getCookie('csrftoken');
 
 function load_posts(url){
 
-    return new Promise((resolve,reject)=>{
-        posts = document.getElementById('posts');
-        fetch(url)
-        .then(response => response.json())
-        .then(data =>{
-            for(i in data){
-                if (data[i].is_share == true){
-                    main = document.createElement("div");
-                    main.className = "poster";
-                    posts.appendChild(main);
-                    a = document.createElement('a');
-                    a.setAttribute("href",`/account/${data[i].user[1]}`);
-                    userImg = document.createElement("img");
-                    userImg.setAttribute("src",`${data[i].user[2]}`) ;
-                    userImg.setAttribute("class","pfps") ;
-                    a.appendChild(userImg);
-                    a.innerHTML += `${data[i].user[1]}`;
-                    main.appendChild(a);
-                    if(data[i].text != null){
-                        main.innerHTML += `<p class="post_text">${data[i].text}</p>`;
-                    }
-                    //#################################################################
-                    //#################################################################
-                    poster = document.createElement("div");
-                    poster.className = "shared_posts";
-                    
-                    a = document.createElement('a');
-                    a.setAttribute("href",`/account/${data[i].shared[1]}`);
-                    userImg = document.createElement("img");
-                    userImg.setAttribute("src",`${data[i].shared[2]}`) ;
-                    userImg.setAttribute("class","pfps") ;
-                    a.appendChild(userImg);
-                    a.innerHTML += `${data[i].shared[1]}`;
-                    poster.appendChild(a);
-                    if(data[i].shared[3] != null){
-                        poster.innerHTML += `<p class="post_text">${data[i].shared[3]}</p>`;
-                    }
-                    if(data[i].shared[4] != null){
-                        poster.innerHTML += `<a href="/p/${data[i].id}"><img src="${data[i].shared[4]}" class="post_img"></a>`;
-                    }
-                    
-                    like = document.createElement("button");
-                    like.className = "like-btn";
-                    like.innerHTML = "like";
-                    like.setAttribute("onclick",`like_post(${data[i].id})`);
-                    button = document.createElement("button");
-                    button.className = "cmt-btn";
-                    button.innerHTML = "comments";
-                    save = document.createElement("button");
-                    save.className = "save-btn";
-                    save.innerHTML = "save";    
-                    button.setAttribute("data-id",`${data[i].id}`);
-                    button.setAttribute("onclick",`cmnt(${data[i].id})`);
-                    save.setAttribute("onclick",`s(${data[i].id})`);
-                    save.setAttribute("data-id",`${data[i].id}`);
-                    share = document.createElement("button");
-                    share.setAttribute("data-id",`${data[i].id}`);
-                    share.className = "share-btn";
-                    share.innerHTML = "=>";
-                    share.setAttribute("onclick",`share_post(${data[i].shared[0]})`);
-                    main.appendChild(poster);
-                    main.appendChild(like);
-                    main.appendChild(button);
-                    main.appendChild(save);
-                    main.appendChild(share);
-                    main.innerHTML += `<a href ="/edit${data[i].id}"><button>edit</button></a> `;
-                    del = document.createElement('button');
-                    del.innerHTML = "X";
-                    del.setAttribute("onclick",`del_post(${data[i].id},${data[i].is_share})`)
-                    main.appendChild(del);
-                    main.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
-                    <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
-                    <br>
-                    <input type="hidden" name="postId" value="${data[i].id}">
-                    <input type="submit" name="comment_submit">
-                    </form>`;
-                    main.innerHTML += `<div id="cmnts${data[i].id}"></div>`;
-                    continue;
-                }
-                poster = document.createElement("div");
-                poster.className = "poster";
-                posts.appendChild(poster);
+return new Promise((resolve,reject)=>{
+    posts = document.getElementById('posts');
+    fetch(url)
+    .then(response => response.json())
+    .then(data =>{
+        for(i in data){
+            if (data[i].is_share == true){
+                main = document.createElement("div");
+                main.className = "poster";
+                posts.appendChild(main);
                 a = document.createElement('a');
                 a.setAttribute("href",`/account/${data[i].user[1]}`);
                 userImg = document.createElement("img");
@@ -106,14 +35,30 @@ function load_posts(url){
                 userImg.setAttribute("class","pfps") ;
                 a.appendChild(userImg);
                 a.innerHTML += `${data[i].user[1]}`;
-                poster.appendChild(a);
+                main.appendChild(a);
                 if(data[i].text != null){
-                    poster.innerHTML += `<p class="post_text">${data[i].text}</p>`;
+                    main.innerHTML += `<p class="post_text">${data[i].text}</p>`;
                 }
-                if(data[i].image != null){
-                    poster.innerHTML += `<a href="/p/${data[i].id}"><img src="${data[i].image}" class="post_img"></a>`;
+                //#################################################################
+                //#################################################################
+                poster = document.createElement("div");
+                poster.className = "shared_posts";
+                
+                a = document.createElement('a');
+                a.setAttribute("href",`/account/${data[i].shared[1]}`);
+                userImg = document.createElement("img");
+                userImg.setAttribute("src",`${data[i].shared[2]}`) ;
+                userImg.setAttribute("class","pfps") ;
+                a.appendChild(userImg);
+                a.innerHTML += `${data[i].shared[1]}`;
+                poster.appendChild(a);
+                if(data[i].shared[3] != null){
+                    poster.innerHTML += `<p class="post_text">${data[i].shared[3]}</p>`;
                 }
-                poster.innerHTML += `<hr>`;
+                if(data[i].shared[4] != null){
+                    poster.innerHTML += `<a href="/p/${data[i].id}"><img src="${data[i].shared[4]}" class="post_img"></a>`;
+                }
+                
                 like = document.createElement("button");
                 like.className = "like-btn";
                 like.innerHTML = "like";
@@ -129,33 +74,96 @@ function load_posts(url){
                 save.setAttribute("onclick",`s(${data[i].id})`);
                 save.setAttribute("data-id",`${data[i].id}`);
                 share = document.createElement("button");
-                share.setAttribute("data-id",`${data[i].id}`);
+                share.setAttribute("data-id",`${data[i].shared[0]}`);
                 share.className = "share-btn";
                 share.innerHTML = "=>";
-                share.setAttribute("onclick",`share_post(${data[i].id})`);
-                poster.appendChild(like);
-                poster.appendChild(button);
-                poster.appendChild(save);
-                poster.appendChild(share);
-                poster.innerHTML += `<a href ="/edit${data[i].id}"><button>edit</button></a> `;
-                del = document.createElement('button');
-                del.innerHTML = "X";
-                del.setAttribute("onclick",`del_post(${data[i].id},${data[i].is_share})`)
-                poster.appendChild(del);
-                poster.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
+                share.setAttribute("onclick",`share_post(${data[i].shared[0]})`);
+                main.appendChild(poster);
+                main.appendChild(like);
+                main.appendChild(button);
+                main.appendChild(save);
+                main.appendChild(share);
+                main.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
                 <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
                 <br>
                 <input type="hidden" name="postId" value="${data[i].id}">
                 <input type="submit" name="comment_submit">
                 </form>`;
-                poster.innerHTML += `<div id="cmnts${data[i].id}"></div>`
+                main.innerHTML += `<div id="cmnts${data[i].id}"></div>`;
+                
+                continue;
             }
-        });
-
-        resolve("Done");
+            poster = document.createElement("div");
+            poster.className = "poster";
+            posts.appendChild(poster);
+            a = document.createElement('a');
+            a.setAttribute("href",`/account/${data[i].user[1]}`);
+            userImg = document.createElement("img");
+            userImg.setAttribute("src",`${data[i].user[2]}`) ;
+            userImg.setAttribute("class","pfps") ;
+            a.appendChild(userImg);
+            a.innerHTML += `${data[i].user[1]}`;
+            poster.appendChild(a);
+            if(data[i].text != null){
+                poster.innerHTML += `<p class="post_text">${data[i].text}</p>`;
+            }
+            if(data[i].image != null){
+                poster.innerHTML += `<a href="/p/${data[i].id}"><img src="${data[i].image}" class="post_img"></a>`;
+            }
+            poster.innerHTML += `<hr>`;
+            like = document.createElement("button");
+            like.className = "like-btn";
+            like.innerHTML = "like";
+            like.setAttribute("onclick",`like_post(${data[i].id})`);
+            button = document.createElement("button");
+            button.className = "cmt-btn";
+            button.innerHTML = "comments";
+            save = document.createElement("button");
+            save.className = "save-btn";
+            save.innerHTML = "save";    
+            button.setAttribute("data-id",`${data[i].id}`);
+            button.setAttribute("onclick",`cmnt(${data[i].id})`);
+            save.setAttribute("onclick",`s(${data[i].id})`);
+            save.setAttribute("data-id",`${data[i].id}`);
+            share = document.createElement("button");
+            share.setAttribute("data-id",`${data[i].id}`);
+            share.className = "share-btn";
+            share.innerHTML = "=>";
+            share.setAttribute("onclick",`share_post(${data[i].id})`);
+            poster.appendChild(like);
+            poster.appendChild(button);
+            poster.appendChild(save);
+            poster.appendChild(share);
+            poster.innerHTML += `<p id="l${data[i].id}">${data[i].likes}</p><form  onsubmit="post_comment(${data[i].id});return false" id="c${data[i].id}">
+            <textarea name="comment" id="textarea${data[i].id}" placeholder="comment" cols="30" rows="10"></textarea>
+            <br>
+            <input type="hidden" name="postId" value="${data[i].id}">
+            <input type="submit" name="comment_submit">
+            </form>`;
+            poster.innerHTML += `<div id="cmnts${data[i].id}"></div>`
+        }
     });
+
+    resolve("Done");
+});
 }
 
+function show_users(){
+        pdiv = document.getElementById("result-posts");
+        udiv = document.getElementById("result-users");
+        udiv.style.display = "block";
+        pdiv.style.display = "none";
+    }
+    
+async function show_posts(){
+        pdiv = document.getElementById("result-posts");
+        udiv = document.getElementById("result-users");
+        udiv.style.display = "none";
+        pdiv.style.display = "block";
+        s = document.getElementById("show-posts-btn").dataset.s;
+        await load_posts(`/api/result${s}`) 
+}
+    
 function cmnt(id){
     fetch(`/api/comments/${id}`)
     .then(response=>response.json())
@@ -169,29 +177,6 @@ function cmnt(id){
             }
         } 
     });
-
-}
-
-function del_post(id,s){
-    fetch(`/api/${id}`,{
-        method :"delete",
-        credentials: "same-origin",
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken"),
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(data =>{
-        e = document.getElementById(`cmnts${id}`);
-        if (s==false){
-            e.parentElement.style.display = "none"; 
-        }  
-        else if(s == true){
-            e.parentElement.style.display = "none";
-        }
-    })
 
 }
 
@@ -366,24 +351,3 @@ function send_notification(text,user){
         body: JSON.stringify(data)
     })
 }
-
-document.addEventListener('DOMContentLoaded',async function(){
-    
-    friends_btn = document.getElementById("friends-list");
-    div = document.getElementById("friends");
-    id = friends_btn.dataset.id;
-    friends_btn.onclick = function(){
-        div.innerHTML = '';
-        fetch(`/api/u/${id}`)
-        .then(response => response.json())
-        .then(data =>{
-            for (i = 0 ; i < data.friends.length ; i++){
-                a = `<a href="/account/${data.friends[i][0]}"> <img src="${data.friends[i][1]}" style="height: 50px; width: auto;"> ${data.friends[i][0]}</a><br>`;
-                div.innerHTML += a;
-            }
-        });
-    
-    }
-    username = document.querySelector("h3").innerHTML;
-    await load_posts(`/api/u/p/${username}`);
-})

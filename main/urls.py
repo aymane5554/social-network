@@ -11,5 +11,8 @@ urlpatterns = [
     path("account/<str:name>",views.others,name="others_profile"),
     path("add/<int:id>",views.add_friend),
     path("save/",views.saveView),
-    path("edit<int:p>/" ,views.edit_post)
+    path("edit<int:p>/" ,views.edit_post),
+    path("result" , views.search_result , name="search-result"),
+    path("cancel/<int:id>",views.cancel_request),
+    path("accept/<int:id>" , views.accept , name="accept-friend"),
 ]

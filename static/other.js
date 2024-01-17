@@ -334,6 +334,7 @@ function send_notification(text,user){
         body: JSON.stringify(data)
     })
 }
+
 document.addEventListener('DOMContentLoaded',async function(){
     
     friends_btn = document.getElementById("friends-list");
@@ -344,8 +345,8 @@ document.addEventListener('DOMContentLoaded',async function(){
         fetch(`/api/u/${id}`)
         .then(response => response.json())
         .then(data =>{
-            for (item in data.friends){
-                a = `<a href="/account/${data.friends[item]}">${data.friends[item]}</a><br>`;
+            for (i = 0 ; i < data.friends.length ; i++){
+                a = `<a href="/account/${data.friends[i][0]}"> <img src="${data.friends[i][1]}" style="height: 50px; width: auto;"> ${data.friends[i][0]}</a><br>`;
                 div.innerHTML += a;
             }
         });

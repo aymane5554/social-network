@@ -7,6 +7,10 @@ class User(AbstractUser):
     bio = models.TextField(blank=True,null=True)
     friends = models.ManyToManyField('self')
     saves = models.ManyToManyField('Post',related_name="saved_posts")
+    
+class Requests(models.Model):
+    send = models.ForeignKey(User,blank=True , null = True , on_delete = models.CASCADE ,related_name="send")
+    rec = models.ForeignKey(User,blank=True , null = True , on_delete = models.CASCADE , related_name="rcvd")
 
 class Post(models.Model):
     text = models.TextField()
@@ -33,4 +37,4 @@ class Reply(models.Model):
 class Notification(models.Model):
     text = models.TextField()
     user = models.ForeignKey(User,on_delete = models.CASCADE,related_name="notifications")
-    link = models.CharField(max_length=60) 
+    link = models.CharField(max_length=250) 

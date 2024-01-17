@@ -7,7 +7,14 @@
     <img src="{{user.image.url}}" id="profile_image">
     <h3>{{user.username}}</h3> 
     <p>description :<br>{{user.bio}}</p>
+    {% if var == "cancel request" %}
+    <a href="/cancel/{{user.id}}"><button class="btn btn-primary" >{{var}}</button></a>
+    {% elif var == "accept request" %}
+    <a href="/accept/{{user.id}}"><button class="btn btn-primary" >{{var}}</button></a>
+    {% else %}
     <a href="/add/{{user.id}}"><button class="btn btn-primary" >{{var}}</button></a>
+    {% endif %}
+    
     <button class="btn btn-info" id="friends-list" data-id="{{user.id}}">friends</button>
     <div id="friends">
 

@@ -30,7 +30,14 @@
                       
                     </ul>
                   </li>
-                
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" onclick="requests()" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      requests
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="requests-btn">
+                      
+                    </ul>
+                  </li>
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       You
@@ -42,12 +49,14 @@
                       <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
                   </li>
-                  {% endif %}
+                  
                 </ul>
-                <form class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="d-flex" method="post" action="/result">
+                  {% csrf_token %}
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+                {% endif %}
               </div>
             </div>
           </nav>
@@ -57,6 +66,24 @@
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
         <script>
+          function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+          var csrftoken = getCookie('csrftoken');
+
           function inbox(){
             fetch("/api/inbox")
             .then(response => response.json())
@@ -64,7 +91,24 @@
               div = document.getElementById("inbox-btn");
               div.innerHTML = "";
               for(i = 0 ; i < data.length ; i++){
-                div.innerHTML += `<li><a class="dropdown-item" href="${data[i].link}">${data[i].text}</a></li>` ;
+                if(data[i].text.slice(0, 7) =="<button"){
+                  div.innerHTML += `<li>${data[i].text}</li>`;
+                }
+                else{
+                  div.innerHTML += `<li><a class="dropdown-item" href="${data[i].link}">${data[i].text}</a></li>` ;
+                }
+              }
+            })
+          }
+
+          function requests(){
+            fetch("/api/requests")
+            .then(response => response.json())
+            .then(data => {
+              div = document.getElementById("requests-btn");
+              div.innerHTML = "";
+              for(i = 0 ; i < data.length ; i++){
+                div.innerHTML += `<li><a class="dropdown-item" href="/account/${data[i].sender}">${data[i].text}</a></li>` ;
               }
             })
           }

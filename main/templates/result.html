@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% if txt == "" %}
+<h1> what are you searching for ??</h1>
+{% else %}
+<h1> the result for {{txt}}</h1>
+<button onclick="show_users()">
+    users
+</button>
+<button id="show-posts-btn" onclick="show_posts()" data-s="{{txt}}">
+    posts
+</button>
+<div id="result-users">
+{% for i in users %}
+<a href="/account/{{i.username}}">
+    <img src="{{i.image.url}}" style="height: 50px; width: auto;">
+    {{i.username}}
+</a><br>
+{% endfor %}
+</div>
+<div id="result-posts">
+    <div id="posts">
+
+    </div>
+{% endif %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="{% static '/result.js' %}"></script>
+
+{% endblock %}

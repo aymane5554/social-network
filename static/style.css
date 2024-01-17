@@ -141,3 +141,11 @@ textarea {
   text-align: center;
   border: 3px solid black;
 }
+
+#result-users{
+  display: block;
+}
+
+#result-posts{
+  display: none;
+}

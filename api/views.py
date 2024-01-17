@@ -1,9 +1,9 @@
-from django.shortcuts import render
 from .serializers import Post_Serializer , Comment_Serializer , UserSerializer ,ReplySerialier ,NotificationsSerialier 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from main.models import Post , User ,Comments ,Reply,Notification
+import json
 # Create your views here.
 
 @login_required(login_url="/login")
@@ -72,7 +72,8 @@ def UserApi(request,id):
     u = User.objects.get(pk = id)
     serialize = UserSerializer(u)
     for i in range(len(serialize.data["friends"])):
-        serialize.data["friends"][i] = User.objects.get(pk = serialize.data["friends"][i]).username
+        ss = UserSerializer(User.objects.get(pk = serialize.data["friends"][i]))
+        serialize.data["friends"][i] = [ss.data["username"],ss.data["image"] ]
     serialize.data["posts"] = request.user.posts.all()
     return JsonResponse(serialize.data,safe=False)
 
@@ -189,9 +190,42 @@ def inboxApi(request):
             text = f"{request.user.username} replied to your comment"
             user = Comments.objects.get(pk = id).user
             p = Comments.objects.get(pk = id).post.id
-            nn =Notification.objects.create(text=text,user=user,link=f"/p/{id}/" )
+            nn =Notification.objects.create(text=text,user=user,link=f"/p/{p}/" )
             nn.save()
             n = request.user.notifications.all()
             serializer = NotificationsSerialier(n,many=True)
         return JsonResponse(serializer.data,safe=False)
     
+@login_required(login_url="/login")
+@api_view(["GET"])
+def requests(request):
+    res = request.user.rcvd.all()
+    reqs = []
+    for i in res :
+        x = {
+            "text" :f"{i.send.username} sent you a friend request",
+            "sender" : i.send.username
+            }
+        reqs.append(x) 
+    
+    return JsonResponse(reqs,safe=False)
+    
+
+@login_required(login_url="/login")
+@api_view(["GET"])
+def resultApi(request,txt):
+    posts = Post.objects.filter(text__contains=txt)
+    serialize = Post_Serializer(posts,many=True)
+    for i in range(len(serialize.data)):
+        user = User.objects.get(pk = serialize.data[i]["user"])
+        serialize.data[i]["user"] = [serialize.data[i]["user"] , user.username,user.image.url]
+        if serialize.data[i]["is_share"] == True:
+            p = Post.objects.get(pk = serialize.data[i]["shared"])
+            if p.image == None :
+                serialize.data[i]["shared"] = [serialize.data[i]["shared"],p.user.username,p.user.image.url,p.text,None]
+            else : 
+                s =  Post_Serializer(p)
+                img = s.data["image"]
+                
+                serialize.data[i]["shared"] = [serialize.data[i]["shared"],p.user.username,p.user.image.url,p.text,img]  
+    return JsonResponse(serialize.data ,safe=False)

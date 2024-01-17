@@ -112,6 +112,20 @@ def others(request,name):
         return redirect("/profile") 
     if user in request.user.friends.all():
         var = "unfriend"
+        return render(request,"others.html",{"user":user,"var":var})
+    try:
+        x = request.user.send.get(rec = user)
+        var = "cancel request"
+        return render(request,"others.html",{"user":user,"var":var})
+    except models.Requests.DoesNotExist:
+        pass
+    try:
+        x = request.user.rcvd.get(send = user)
+        var = "accept request"
+        return render(request,"others.html",{"user":user,"var":var})
+    except models.Requests.DoesNotExist:
+        pass
+        
     return render(request,"others.html",{"user":user,"var":var})
 
 @login_required(login_url="/login")
@@ -121,9 +135,25 @@ def add_friend(request,id):
     if fr in user.friends.all():
         user.friends.remove(fr)
         return redirect(f"/account/{fr.username}")
-    user.friends.add(fr)
-    models.Notification.objects.create(text=f"{request.user.username} followed you" , user = fr , link=f"/account/{request.user.username}")
+    models.Requests.objects.create(send=request.user,rec=models.User.objects.get(pk=id))
     return redirect(f"/account/{fr.username}")
+
+@login_required(login_url="/login")
+def accept(request,id):
+    fr = models.User.objects.get(pk=id) 
+    if fr in request.user.friends.all():
+        return redirect(f"/account/{fr.username}")
+    request.user.friends.add(fr)    
+    r = request.user.rcvd.get(send = fr)
+    r.delete()
+    return redirect(f"/account/{fr.username}")
+
+@login_required(login_url="/login")
+def cancel_request(request,id):
+    user = models.User.objects.get(pk = id)
+    r = request.user.send.get(rec = user)
+    r.delete()
+    return redirect(f"/account/{user.username}")
 
 @login_required(login_url="/login")
 def saveView(request):
@@ -131,6 +161,7 @@ def saveView(request):
 
 @login_required(login_url="/login")
 def edit_post(request,p):
+
     post  = models.Post.objects.get(pk = p)
     if request.method == "POST":
         if request.POST["text"] == "" and len(request.FILES) == 0:
@@ -143,3 +174,13 @@ def edit_post(request,p):
         post.save() 
         return redirect("/profile")
     return render(request,"editpost.html",{"post" : post})
+
+
+def search_result(request):
+    txt = " "
+    if request.method == "POST":
+        txt = request.POST["search"]
+        users = models.User.objects.filter(username__contains=txt)
+        posts = models.Post.objects.filter(text__contains=txt)
+        return render(request , "result.html" , {"txt" : txt , "users" : users , "posts" : posts})
+    return render(request , "result.html" , {"txt" : txt})

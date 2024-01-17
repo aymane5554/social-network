@@ -8,5 +8,7 @@ urlpatterns = [
     path("u/p/<str:id>",views.prpo, name="user's posts"),
     path("saves/",views.saved, name="savedPost"),
     path("share",views.share_view),
-    path("inbox",views.inboxApi)
+    path("inbox",views.inboxApi),
+    path("result<str:txt>" , views.resultApi),
+    path("requests" , views.requests , name="get requests"),
 ]
